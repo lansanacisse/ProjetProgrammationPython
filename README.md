@@ -14,9 +14,11 @@ git clone https://github.com/lansanacisse/ProjetProgrammationPython.git
 cd ProjetProgrammationPython/
 ```
 Install dependencies
-```pip install -r requirements.txt```
+```pip install -r requirements.txt
+```
 Run the program
-```python main.py```
+```python main.py
+```
 
 ### Etudiants
 * Lansana CISSE
