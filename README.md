@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ```
 Run the program
 ```
-python main.py
+python3 main.py
 ```
 
 ### Etudiants
