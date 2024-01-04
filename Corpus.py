@@ -16,6 +16,13 @@ def singleton(cls):
 #@singleton
 class Corpus:
     def __init__(self, nom, authors, id2doc):
+        """_summary_
+
+        Args:
+            nom (_type_): _description_
+            authors (_type_): _description_
+            id2doc (_type_): _description_
+        """
         self.nom = nom
         self.authors = authors
         self.id2doc = id2doc
@@ -46,6 +53,7 @@ class Corpus:
     #         return pickle.load(f)
 
     def save(self):
+       
         dico={"documents": [], "auteurs": [] }
         for doc in self._id2doc.values():
             dico["documents"].append(doc)
@@ -62,6 +70,15 @@ class Corpus:
         
     
     def search(self, mot):
+        """ Cette fonction retourne les passages des documents contenant le mot-clef entré en paramètre
+
+        Args:
+            mot (_string_): mot-clef à rechercher dans les documents
+
+        Returns:
+            _list_:  Passage des documents contenant le mot-clef entré en paramètre
+        """
+
         res = []
         for i in re.compile(r'\b{}\b'.format(str(mot)), re.IGNORECASE).finditer(self.all):
             p = i.span()
@@ -71,6 +88,14 @@ class Corpus:
 
     
     def concordance(self, mot):
+        """ Cette fonction construit concordancier pour uneexpression donnée
+
+        Args:
+            mot (_string_): mot-clef à rechercher dans les documents
+
+        Returns:
+            _df_: Passage des documents contenant le mot-clef entré en paramètre avec le contexte gauche et droit
+        """
         liste= self.search(mot)
         dic = {"contexte gauche":[], "motif trouvé":[], "contexte droit":[]}
         for el in liste:
@@ -81,13 +106,21 @@ class Corpus:
         return df
 
 
-        
-    # retourne le vocabulaire de chaque document
     def vocabulary(self):
+        """ retourne le vocabulaire de chaque document
+
+        Returns:
+            _dict_:  vocabulaire de chaque document 
+        """
         voc = { k: list(set(self.nettoyer_texte(v.getText()).split())) for k,v in self.id2doc.items() }
         return voc
     
     def occurence(self):
+        """ retourne l'occurence de chaque mot dans le corpus
+
+        Returns:
+            _dict_:  occurence de chaque mot dans le corpus
+        """
         all = self.nettoyer_texte(self.all).split()
         voc = list(set(all))
         occ = { k: all.count(k) for k in voc }
