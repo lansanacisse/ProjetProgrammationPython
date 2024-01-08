@@ -32,7 +32,7 @@ http://127.0.0.1:8080
 * Romain DUC
 
 ### Documentation doxygen
-[Documentation générée](documentation/html/index.html)
+Ouvrir ce fichier documentation/html/index.html avec un navigateur :<br/>[Documentation générée](documentation/html/index.html)
 
 ### License
 GNU General Public License v3.0 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.fr.html) <br/>[LICENSE](LICENSE)
