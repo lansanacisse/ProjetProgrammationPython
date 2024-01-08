@@ -60,7 +60,7 @@ app.layout = html.Div([dcc.Dropdown(
     id = 'cbMenu',
     options=[
         {'label': 'Informations générales', 'value': 'infoGen'},
-        {'label': 'Détails des corpus par Document', 'value': 'docDetail'}
+        {'label': 'Exploration des Documents ', 'value': 'docDetail'}
     ],
     value = 'infoGen'
 ),html.Div(id="divInfos",children=
@@ -68,7 +68,7 @@ app.layout = html.Div([dcc.Dropdown(
     
     html.Center(html.Label("Cette application dispose d'un moteur de recherche permettant de comparer différentes statistiques de pertinence en fonction")),
     html.Br(),
-    html.Center(html.Label("de mot clés tapés dans une barre de recherche (utilisez le menu scroll du dessus afin de changer de menu)")),
+    html.Center(html.Label("de mots-clés tapés dans une barre de recherche (utilisez le menu scroll du dessus afin de changer de menu)")),
     
     
     html.Center(html.H2("Statistiques : ")),
@@ -123,18 +123,15 @@ html.Div(id='mainDocDetails',children=[
                       {'id': 'Textabrv', 'name': 'Texte'},
                   ],style_cell={"width":"5px",'minWidth':'5px','maxWidth':'5px'},style_table={'width':'99.5%'}),html.Div(id='divDetailsRight',children=[html.Div(id='divWordsRight')],style={'display':'block','float':'right','width':'50%','height':'100%'})],id="divRight",style={'float':'right','width':'50%','height':'90%',"display":"block"})],style={'z-index':'-1'})])
 @app.callback(
-    Output('tableReddit', 'data'),
-    Output('tableArxiv', 'data'),
-    State('cbAuteurLeft', 'value'),
-    State('cbAuteurRight', 'value'),
-    State('txtSearch', 'value'),
-    State('dateFilter', 'start_date'),
+    Output('tableReddit', 'data'),Output('tableArxiv', 'data'),
+    State('cbAuteurLeft', 'value'),State('cbAuteurRight', 'value'),
+    State('txtSearch', 'value'),State('dateFilter', 'start_date'),
     State('dateFilter', 'end_date'),
     Input('btnFilter', 'n_clicks'),
 )
-def apply_filter(cbAuteur_value_left,cbAuteur_value_right,keywords,start,end,clicks):
-    df_filtered_1 = dfReddit.copy()
-    df_filtered_2 = dfArxiv.copy()
+def apply_filter(cbAuteur_value_left,cbAuteur_value_right,kw,start,end,clicks):
+    dataf1 = dfReddit.copy()
+    dataf2 = dfArxiv.copy()
 
     start_val = ''
     end_val=''
@@ -143,9 +140,9 @@ def apply_filter(cbAuteur_value_left,cbAuteur_value_right,keywords,start,end,cli
     print(end)
 
     if cbAuteur_value_left:
-        df_filtered_1 = df_filtered_1[df_filtered_1['Auteur'].eq(cbAuteur_value_left)]
+        dataf1 = dataf1[dataf1['Auteur'].eq(cbAuteur_value_left)]
     if cbAuteur_value_right:
-        df_filtered_2 = df_filtered_2[df_filtered_2['Auteur'].eq(cbAuteur_value_right)]
+        dataf2 = dataf2[dataf2['Auteur'].eq(cbAuteur_value_right)]
 
     if not(start):
         start_val=datetime.date(min(dfid2doc['Date']))
@@ -156,42 +153,38 @@ def apply_filter(cbAuteur_value_left,cbAuteur_value_right,keywords,start,end,cli
     else:
         end_val=datetime.strptime(end, "%Y-%m-%d").date()
 
-    df_filtered_1=df_filtered_1[(df_filtered_1['Date'] >=start_val) & (df_filtered_1['Date']<=end_val)]
-    df_filtered_2=df_filtered_2[(df_filtered_2['Date'] >=start_val) & (df_filtered_2['Date']<=end_val)]
+    dataf1=dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)]
+    dataf2=dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
 
-    if keywords:
-        print('---------------------',keywords)
-        keywords_clean = corpus.clean_text(keywords)
+    if kw:
+        print('---------------------',kw)
+        keywords_clean = corpus.clean_text(kw)
         arr_keywords=keywords_clean.split(" ")
         dictest=corpus.searchCosine(arr_keywords)
-        df_filtered_1['score'] = df_filtered_1['Nom'].apply(lambda x:dictest[x])
-        df_filtered_2['score'] = df_filtered_2['Nom'].apply(lambda x:dictest[x])
+        dataf1['score'] = dataf1['Nom'].apply(lambda x:dictest[x])
+        dataf2['score'] = dataf2['Nom'].apply(lambda x:dictest[x])
         dfReddit['score']=dfReddit['Nom'].apply(lambda x:dictest[x])
         dfArxiv['score']=dfArxiv['Nom'].apply(lambda x:dictest[x])
-        df_filtered_1 = df_filtered_1.sort_values('score',ascending=False)
-        df_filtered_2 = df_filtered_2.sort_values('score',ascending=False)
+        dataf1 = dataf1.sort_values('score',ascending=False)
+        dataf2 = dataf2.sort_values('score',ascending=False)
 
         if cbAuteur_value_left:
-            df_filtered_1 = df_filtered_1[df_filtered_1['Auteur'].eq(cbAuteur_value_left)]
+            dataf1 = dataf1[dataf1['Auteur'].eq(cbAuteur_value_left)]
         if cbAuteur_value_right:
-            df_filtered_2 = df_filtered_2[df_filtered_2['Auteur'].eq(cbAuteur_value_right)]
+            dataf2 = dataf2[dataf2['Auteur'].eq(cbAuteur_value_right)]
 
-    df_filtered_1=df_filtered_1[(df_filtered_1['Date'] >=start_val) & (df_filtered_1['Date']<=end_val)]
-    df_filtered_2=df_filtered_2[(df_filtered_2['Date'] >=start_val) & (df_filtered_2['Date']<=end_val)]
+    dataf1=dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)]
+    dataf2=dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
 
-    return df_filtered_1.to_dict(orient='records'),df_filtered_2.to_dict(orient='records')
+    return dataf1.to_dict(orient='records'),dataf2.to_dict(orient='records')
 
 
 @app.callback(
-    Output('cbAuteurLeft', 'value'),
-    Output('cbAuteurRight', 'value'),
-    Output('txtSearch', 'value'),
-    Output('dateFilter', 'start_date'),
+    Output('cbAuteurLeft', 'value'),Output('cbAuteurRight', 'value'),
+    Output('txtSearch', 'value'),Output('dateFilter', 'start_date'),
     Output('dateFilter', 'end_date'),
-    [State('cbAuteurLeft', 'value'),
-     State('cbAuteurRight', 'value'),
-     State('txtSearch', 'value')],
-    State('dateFilter', 'start_date'),
+    [State('cbAuteurLeft', 'value'),State('cbAuteurRight', 'value'),
+     State('txtSearch', 'value')],State('dateFilter', 'start_date'),
     State('dateFilter', 'end_date'),
     [Input('btnClear', 'n_clicks')]
 )
@@ -200,14 +193,11 @@ def clear_filter(cbAuteurLeft,cbAuteurRight,txtSearch,start,end,clicks):
         return '','','',min(dfid2doc['Date']),max(dfid2doc['Date'])
 
 @app.callback(
-    [Output("divDetailsLeft", "children"),
-     Output("divWordsLeft", "children"),
-     Output("divDetailsLeft", "style")],
+    [Output("divDetailsLeft", "children"),Output("divWordsLeft", "children"),
+    Output("divDetailsLeft", "style")],
     Input('tableReddit', 'active_cell'),
-    [State('tableReddit', 'data'),
-     State('txtSearch', 'value'),
-     State('tableReddit', 'page_current'),
-     State('tableReddit', 'page_size')]
+    [State('tableReddit', 'data'),State('txtSearch', 'value'),
+    State('tableReddit', 'page_current'),State('tableReddit', 'page_size')]
 )
 def update_left_pannel(active_cell,data,txt,page_curr,page_size):
     return_value=()
@@ -262,14 +252,11 @@ def update_left_pannel(active_cell,data,txt,page_curr,page_size):
     return return_value
 
 @app.callback(
-    [Output("divDetailsRight", "children"),
-     Output("divWordsRight", "children"),
+    [Output("divDetailsRight", "children"),Output("divWordsRight", "children"),
      Output("divDetailsRight", "style")],
     Input('tableArxiv', 'active_cell'),
-    [State('tableArxiv', 'data'),
-     State('txtSearch', 'value'),
-     State('tableArxiv', 'page_current'),
-     State('tableArxiv', 'page_size')]
+    [State('tableArxiv', 'data'),State('txtSearch', 'value'),
+     State('tableArxiv', 'page_current'),State('tableArxiv', 'page_size')]
 )
 def update_right_pannel(active_cell,data,txt,page_curr,page_size):
     return_value=()
@@ -281,7 +268,6 @@ def update_right_pannel(active_cell,data,txt,page_curr,page_size):
             row = active_cell['row']
         Id=data[row]['Id']
         txtDoc = dfArxiv[dfArxiv['Id'].eq(Id)]['Text']
-        coAuteurs = ' - '.join(dfArxiv[dfArxiv['Id'].eq(Id)]['Caractéristiques'].values[0])
         if txt:
             score = dfArxiv[dfArxiv['Id'].eq(Id)]['score'].values[0]
             if score==0.00:
@@ -320,9 +306,9 @@ def update_right_pannel(active_cell,data,txt,page_curr,page_size):
                 tfxidfWords.append(value)
                 tfxidfWords.append(html.Br())
 
-            return_value = html.Div([html.Center([html.Br(),html.B('Score : ',style={'font-size':'25px'}),html.Label(children=[score],style={'background-color':color,'font-size':'20px'}),html.Br(),html.Div(id='divWordsRight'),html.Br(),html.B('Full text : ',style={'font-size':'25px'}),html.Br(),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br(),'Auteur(s) : '+coAuteurs])]),html.Div(children=tfxidfWords),{'display':'block'}
+            return_value = html.Div([html.Center([html.Br(),html.B('Score : ',style={'font-size':'25px'}),html.Label(children=[score],style={'background-color':color,'font-size':'20px'}),html.Br(),html.Div(id='divWordsRight'),html.Br(),html.B('Full text : ',style={'font-size':'25px'}),html.Br(),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br()])]),html.Div(children=tfxidfWords),{'display':'block'}
         else:
-            return_value = html.Div([html.Center([html.B('Full text : ',style={'font-size':'25px'}),html.Br(),html.Div(id='divWordsRight'),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br(),'Auteur(s) : '+coAuteurs])]),html.Div(),{'display':'block','border-left':'solid 0.5px'}
+            return_value = html.Div([html.Center([html.B('Full text : ',style={'font-size':'25px'}),html.Br(),html.Div(id='divWordsRight'),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br()])]),html.Div(),{'display':'block','border-left':'solid 0.5px'}
     return return_value
 
 # df = pd.DataFrame.from_dict(vocab)
