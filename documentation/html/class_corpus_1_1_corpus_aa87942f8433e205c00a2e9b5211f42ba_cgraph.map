@@ -1,0 +1,14 @@
+<map id="Corpus.Corpus.matrice" name="Corpus.Corpus.matrice">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,162,107"/>
+<area shape="rect" id="Node000002" href="$class_corpus_1_1_corpus.html#abd45c0dc9ec95c989825d9c26e091f83" title=" " alt="" coords="210,5,383,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,78,243,34,245,39,123,83"/>
+<area shape="rect" id="Node000003" href="$class_corpus_1_1_corpus.html#aaf3ca9abe7bc51492d209c3127d96df7" title=" " alt="" coords="431,31,607,56"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="162,82,415,53,416,58,163,88"/>
+<area shape="rect" id="Node000005" href="$class_corpus_1_1_corpus.html#af70d9e3b22b6eacaf927b446e67e4ecb" title=" " alt="" coords="233,107,360,132"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="162,101,218,107,217,113,162,106"/>
+<area shape="rect" id="Node000006" href="$class_corpus_1_1_corpus.html#abb1fa4ae543203e22c8920659d471609" title=" " alt="" coords="236,156,357,182"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="116,105,211,142,230,149,228,154,209,147,114,110"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,25,416,29,415,34,383,31"/>
+<area shape="rect" id="Node000004" href="$class_corpus_1_1_corpus.html#a8be27119ecbd75dcc4b4871e5431b76a" title=" " alt="" coords="655,23,816,64"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="607,41,640,41,640,46,607,46"/>
+</map>

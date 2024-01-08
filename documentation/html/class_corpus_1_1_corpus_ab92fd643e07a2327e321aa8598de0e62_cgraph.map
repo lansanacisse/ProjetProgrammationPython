@@ -1,0 +1,9 @@
+<map id="Corpus.Corpus.searchCosine" name="Corpus.Corpus.searchCosine">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,199,39"/>
+<area shape="rect" id="Node000002" href="$class_corpus_1_1_corpus.html#abd45c0dc9ec95c989825d9c26e091f83" title=" " alt="" coords="247,13,420,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,23,231,23,231,28,199,28"/>
+<area shape="rect" id="Node000003" href="$class_corpus_1_1_corpus.html#aaf3ca9abe7bc51492d209c3127d96df7" title=" " alt="" coords="468,13,644,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,23,452,23,452,28,420,28"/>
+<area shape="rect" id="Node000004" href="$class_corpus_1_1_corpus.html#a8be27119ecbd75dcc4b4871e5431b76a" title=" " alt="" coords="692,5,853,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="644,23,677,23,677,28,644,28"/>
+</map>
