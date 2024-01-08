@@ -22,7 +22,7 @@ Run the program (ui)
 python3 index.py
 ```
 
-Open the browser (Chrome, Safari, Arc, éviter Firefox) et entrer l'adresse suivante : <br/>
+Open the browser (Chrome, Safari, Arc, Opera, éviter Mozilla Firefox) et entrer l'adresse suivante : <br/>
 http://127.0.0.1:8080
 
 
@@ -30,6 +30,9 @@ http://127.0.0.1:8080
 ### Etudiants
 * Lansana CISSE
 * Romain DUC
+
+### Documentation doxygen
+[Documentation générée](documentation/html/index.html)
 
 ### License
 GNU General Public License v3.0 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.fr.html) <br/>[LICENSE](LICENSE)

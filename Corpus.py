@@ -17,12 +17,11 @@ import string
 # @singleton
 class Corpus:
     def __init__(self, nom, authors, id2doc):
-        """_summary_
-
-        Args:
-            nom (_type_): _description_
-            authors (_type_): _description_
-            id2doc (_type_): _description_
+        """
+        @brief : Constructeur de la classe Corpus
+        @param nom : nom du corpus
+        @param authors : un dictionnaire des auteurs du corpus
+        @param id2doc : un dictionnaire des documents du corpus
         """
         self.nom = nom
         self.authors = authors
@@ -38,6 +37,9 @@ class Corpus:
         self.dfTFIDF = pd.DataFrame()
 
     def __repr__(self):
+        """
+        @brief : Représentation de la classe Corpus
+        """
         return f'Corpus {self.nom} with {self.ndoc} documents by {self.naut} authors'
     
     def getdfTfIdf(self):
@@ -66,6 +68,9 @@ class Corpus:
 
 
     def save(self):
+        """
+        @brief : Sauvegarde le corpus dans un fichier csv
+        """
         dico={"documents": [], "auteurs": [] }
         for doc in self.id2doc.values():
             dico["documents"].append(doc)
@@ -74,6 +79,10 @@ class Corpus:
         df.to_csv("{}.csv".format(self.nom))
     
     def load(self, titre = "out.csv"):
+        """
+        @brief : Charge le corpus depuis un fichier csv
+        @param titre : titre du fichier csv
+        """
         df = pd.read_csv(titre)
         self.setNom(titre[:-4])
         df["documents"].apply(self.addDocument)
@@ -82,13 +91,10 @@ class Corpus:
         
     
     def search(self, mot):
-        """ Cette fonction retourne les passages des documents contenant le mot-clef entré en paramètre
-
-        Args:
-            mot (_string_): mot-clef à rechercher dans les documents
-
-        Returns:
-            _list_:  Passage des documents contenant le mot-clef entré en paramètre
+        """ 
+        @brief : Recherche les passages contenant le mot-clef entré en paramètre
+        @param mot : mot-clef à rechercher dans les documents
+        @return : liste des passages contenant le mot-clef entré en paramètre
         """
         
         res = []
@@ -98,6 +104,11 @@ class Corpus:
         return res
     
     def recherche(self, mot):
+        """
+        @brief : Recherche les passages contenant le mot-clef entré en paramètre
+        @param mot : mot-clef à rechercher dans les documents
+        @return : liste des passages contenant le mot-clef entré en paramètre
+        """
         passages = []
         texte = self.all.split(". ")
         for i in texte:
@@ -108,13 +119,10 @@ class Corpus:
 
     
     def concordance(self, mot):
-        """ Cette fonction construit concordancier pour uneexpression donnée
-
-        Args:
-            mot (_string_): mot-clef à rechercher dans les documents
-
-        Returns:
-            _df_: Passage des documents contenant le mot-clef entré en paramètre avec le contexte gauche et droit
+        """ 
+        @brief : Recherche les passages contenant le mot-clef entré en paramètre
+        @param mot : mot-clef à rechercher dans les documents
+        @return : dataframe des passages contenant le mot-clef entré en paramètre
         """
         liste= self.search(mot)
         dic = {"contexte gauche":[], "motif trouvé":[], "contexte droit":[]}
@@ -127,17 +135,17 @@ class Corpus:
 
 
     def vocabulary(self):
-        """ retourne le vocabulaire de chaque document
-
-        Returns:
-            _dict_:  vocabulaire de chaque document 
+        """
+        @brief : Retourne le vocabulaire du corpus
         """
         voc = { k: list(set(self.nettoyer_texte(v.getTexte()).split())) for k,v in self.id2doc.items() }
         return voc
     
     def vocab(self):
-       
-        mots = re.split(r"\s+", self.nettoyer_texte(self.all))
+        """
+        @brief : Retourne le vocabulaire du corpus
+        """
+        mots = re.split(r"\s+", self.clean_text(self.all))
         res = {}
         i=0
         for value in sorted(set(mots)):
@@ -147,10 +155,8 @@ class Corpus:
         return res
     
     def occurence(self):
-        """ retourne l'occurence de chaque mot dans le corpus
-
-        Returns:
-            _dict_:  occurence de chaque mot dans le corpus
+        """
+        @brief : Retourne les occurences des mots du corpus
         """
         tout = self.nettoyer_texte(self.all).split()
         voc = list(set(tout))
@@ -161,6 +167,7 @@ class Corpus:
     def stat(self):
         """
         @brief : Calcul les statistiques du Corpus
+        @return: statistiques du Corpus sous forme de chaine de caractères
         """
         reddit = 0
         arxiv = 0
@@ -216,15 +223,16 @@ class Corpus:
 
     def matrice(self):
         """
-        @brief : Calcul la matrice tf-idf du Corpus
+        @brief : Calcul la matrice tf-idf
         """
         mat_TF = {}
+        valeurs = self.id2doc.values()
 
-        for doc in self.id2doc.values():
+        for doc in valeurs:
             mat_TF[doc.getTitre()] = {}
 
             docText = doc.getTexte()
-            chaineCleaned = self.nettoyer_texte(docText)
+            chaineCleaned = self.clean_text(docText)
             splitedWords = re.split('\s+', chaineCleaned) # split la liste avec espaces
 
             deja_vu = []
@@ -246,8 +254,8 @@ class Corpus:
         tf_idf = {}
 
         # calcul de la fréquence de chaque mot dans chaque document
-        for doc in self.id2doc.values():
-            chaineCleaned = self.nettoyer_texte(doc.getTexte())
+        for doc in valeurs:
+            chaineCleaned = self.clean_text(doc.getTexte())
             splitedWords = chaineCleaned.split() # split la liste avec espaces
             for word in splitedWords:
                 if word in tf_idf:
@@ -261,7 +269,7 @@ class Corpus:
             # mettre à 0 les mots qui manquent au vocabulaire
             
             total_count = 0
-            for doc in self.id2doc.values():
+            for doc in valeurs:
                 texte_doc = doc.getTexte()
                 if word in texte_doc:
                     total_count += 1
@@ -283,7 +291,7 @@ class Corpus:
         mat_TFIDF = {}
         for doc in self.id2doc.values():
             mat_TFIDF[doc.getTitre()] = {}
-            chaineCleaned = self.nettoyer_texte(doc.getTexte())
+            chaineCleaned = self.clean_text(doc.getTexte())
             splitedWords = chaineCleaned.split() # split la liste avec espaces
             for word in self.voc.keys(): # initialisation
                 mat_TFIDF[doc.getTitre()][word] = 0
@@ -292,11 +300,10 @@ class Corpus:
                 idf = idf_scores[word]
                 mat_TFIDF[doc.getTitre()][word] = tf * idf
 
-        dfTF = pd.DataFrame(mat_TF) 
-        dfTFIDF = pd.DataFrame(mat_TFIDF) 
+        self.dfTF = pd.DataFrame(mat_TF) 
+        self.dfTFIDF = pd.DataFrame(mat_TFIDF) 
 
-        self.dfTF = dfTF
-        self.dfTFIDF = dfTFIDF
+
 
     # TF-IDF method
     def tf(self, i, mot, voc):
@@ -316,9 +323,6 @@ class Corpus:
         return math.log(D/d)
     
     def mat_TFIDF(self):
-        """
-        @brief : Calcul la matrice TF-IDF du Corpus
-        """
         voc=self.vocabulary()
         n = self.ndoc
         mots = self._mots
@@ -331,22 +335,23 @@ class Corpus:
 
     def searchCosine(self, keywords):
         """
-        @param keywords: liste de mots clés
         @brief : Recherche les documents les plus similaires aux mots clés
+        @param keywords: liste de mots clés
+        @return: dictionnaire des documents triés par similarité décroissante
         """
         # Création du vecteur pour les mots-clés
         # 1 si le mot est dans les mots-clés, 0 sinon
-        vecteur_mots_cles = [1 if mot in keywords else 0 for mot in self.voc]
+        vecteur_mots_cles = np.array([1 if mot in keywords else 0 for mot in self.voc])
 
         # Génération des vecteurs pour chaque document
         vecteurs_documents = {}
         for document in self.id2doc.values():
             titre_doc = document.getTitre()
-            texte_nettoye = self.nettoyer_texte(document.getText())
+            texte_nettoye = self.clean_text(document.getTexte())
             mots_document = texte_nettoye.split()
 
             # Création du vecteur binaire pour le document
-            vecteur_doc = [1 if mot in mots_document else 0 for mot in self.vocab]
+            vecteur_doc = [1 if mot in mots_document else 0 for mot in self.voc]
             vecteurs_documents[titre_doc] = vecteur_doc
 
         # Calcul de la similarité cosinus
@@ -358,7 +363,7 @@ class Corpus:
             if norme_vecteur_mot_cles * norme_vecteur_doc == 0:
                 similarite_cosinus = 0
             else:
-                similarite_cosinus = (vecteur_mots_cles @ vecteur) / (norme_vecteur_mot_cles * norme_vecteur_doc)
+                similarite_cosinus = (vecteur_mots_cles @ np.array(vecteur)) / (norme_vecteur_mot_cles * norme_vecteur_doc)
             resultats_similarite[titre] = similarite_cosinus
 
         # Tri des résultats par similarité décroissante
@@ -369,6 +374,11 @@ class Corpus:
 
     
     def clean_text(self, text):
+        """
+        @brief : Nettoie le texte passé en paramètre
+        @param text: texte à nettoyer
+        @return: texte nettoyé
+        """
         # Remove URLs from the text
         text_no_urls = re.sub(r'https?://\S+|www\.\S+', '', text)
         # Tokenize the text into words
@@ -407,7 +417,7 @@ class Corpus:
     def get_id2doc_DF(self):
         """
         @brief : Retourne le dictionnaire id2doc
-        @return: dataframe du dictionnaire id2doc
+        @return: dataframe contenant les attributs des documents du corpus
         """
 
         df = pd.DataFrame(columns=['Id','Nom','Auteur','Date','dateFr','URL','Text','Textabrv','Type'])

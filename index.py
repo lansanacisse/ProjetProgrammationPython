@@ -163,7 +163,7 @@ def apply_filter(cbAuteur_value_left,cbAuteur_value_right,keywords,start,end,cli
         print('---------------------',keywords)
         keywords_clean = corpus.clean_text(keywords)
         arr_keywords=keywords_clean.split(" ")
-        dictest=corpus.recherche(arr_keywords)
+        dictest=corpus.searchCosine(arr_keywords)
         df_filtered_1['score'] = df_filtered_1['Nom'].apply(lambda x:dictest[x])
         df_filtered_2['score'] = df_filtered_2['Nom'].apply(lambda x:dictest[x])
         dfReddit['score']=dfReddit['Nom'].apply(lambda x:dictest[x])

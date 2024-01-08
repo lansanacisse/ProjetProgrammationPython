@@ -1,12 +1,11 @@
 class Document:
     def __init__(self, titre, auteur, date, url, texte):
         """
-        Args:
-            titre (str): titre du document
-            auteur (str): auteur du document
-            date (datetime): date de publication du document
-            url (str): url du document
-            texte (str): texte du document
+        @param titre: titre du document
+        @param auteur: auteur du document
+        @param date: date de publication du document
+        @param url: url du document
+        @param texte: texte du document
         """
         self.titre = titre
         self.auteur = auteur
@@ -44,13 +43,12 @@ class Document:
 class RedditDocument(Document):
     def __init__(self, titre, auteur, date, url, texte, type="Reddit"):
         """
-        Args:
-            titre (str): titre du document
-            auteur (str): auteur du document
-            date (datetime): date de publication du document
-            url (str): url du document
-            texte (str): texte du document
-            type (str): type du document
+        @param titre: titre du document
+        @param auteur: auteur du document
+        @param date: date de publication du document
+        @param url: url du document
+        @param texte: texte du document
+        @param type: type du document
         """
         super().__init__(titre, auteur, date, url, texte)
         self.type = type
@@ -68,13 +66,12 @@ class RedditDocument(Document):
 class ArxivDocument(Document):
     def __init__(self, titre, auteur, date, url, texte, type="Arxiv"):
         """
-        Args:
-            titre (str): titre du document
-            auteur (str): auteur du document
-            date (datetime): date de publication du document
-            url (str): url du document
-            texte (str): texte du document
-            type (str): type du document
+        @param titre: titre du document
+        @param auteur: auteur du document
+        @param date: date de publication du document
+        @param url: url du document
+        @param texte: texte du document
+        @param type: type du document
         """
         super().__init__(titre, auteur, date, url, texte)
         self.type = type

@@ -3,8 +3,7 @@ from Document import RedditDocument, ArxivDocument
 class DocumentGenerator:
 
     """
-    @brief Classe permettant de créer des instances de documents (Pattern Factory)
-    @return Une instance de document, selon le type passé en paramètre
+    @class Classe permettant de créer des instances de documents (Pattern Factory)
     """
 
     @staticmethod
@@ -16,6 +15,7 @@ class DocumentGenerator:
         @param date Date de publication du document
         @param url URL du document
         @param texte Contenu du document
+        @return Une instance de document, selon le type passé en paramètre
         """
         if type == "Reddit":
             return RedditDocument(titre, auteur, date, url, texte)
