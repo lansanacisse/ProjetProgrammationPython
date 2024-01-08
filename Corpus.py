@@ -172,8 +172,8 @@ class Corpus:
                 mots += len(texte.split())
                 arxiv += 1
                 motsbis += len(texte.split())
-        return f"\nLes documents de type reddit sont {reddit} et ont en moyenne {mots} mots " \
-            +f"\nLes documents de type arxiv sont {arxiv} et ont en moyenne {motsbis} mots "
+        return f"Les documents Reddit sont {reddit} et ont en moyenne {mots} mots. " \
+            +f"Les documents ArXiv sont {arxiv} et ont en moyenne {motsbis} mots. "
 
     
     #nettoyer un texte passé en paramètre

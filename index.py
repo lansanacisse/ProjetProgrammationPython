@@ -37,13 +37,13 @@ auteurReddit = dfReddit["Auteur"].unique()
 auteurArxiv = dfArxiv["Auteur"].unique()
 
 statsVoc = list()
-statsVoc.append("Taille du vocabulaire : "+str(len(corpus.voc)))
+statsVoc.append("Longueur du vocab : "+str(len(corpus.voc)))
 statsVoc.append(html.Br())
 statsVoc.append(corpus.stat())
 statsVoc.append(html.Br())
 statsVoc.append(html.Br())
 
-statsVoc.append("Les 15 plus grandes sommes de TF-IDF : ")
+statsVoc.append("Les 10 premières de TF-IDF : ")
 statsVoc.append(html.Br())
 statsVoc.append(html.Br())
 
@@ -51,7 +51,7 @@ dictTFIDF = dict()
 for indx, row in corpus.getdfTfIdf().iterrows():
     dictTFIDF[indx] = row.sum()
 
-for k, v in sorted(dictTFIDF.items(), key=lambda item: item[1], reverse=True)[0:15]:
+for k, v in sorted(dictTFIDF.items(), key=lambda item: item[1], reverse=True)[0:10]:
     l = html.Label(k+" : TF-IDF = "+str(round(v, 2)))
     statsVoc.append(l)
     statsVoc.append(html.Br())
@@ -63,7 +63,18 @@ app.layout = html.Div([dcc.Dropdown(
         {'label': 'Détails des corpus par Document', 'value': 'docDetail'}
     ],
     value = 'infoGen'
-),html.Div(id="divInfos",children=[html.Center([html.H1('Informations générales'),html.Label("Cette application dispose d'un moteur de recherche permettant de comparer différentes statistiques de pertinence en fonction"),html.Br(),html.Label("de mot clés tapés dans une barre de recherche (utilisez la liste déroulante du dessus afin de changer de menu)"),html.Br(),html.Label("les corpus sont les suivants :")]),html.Br(),html.Br(),html.Div([html.Center([html.H2('Corpus "ML" Reddit'),html.Label("Ce corpus de document contient les "+ str(int(n_doc/2)) +" premiers documents",style={'font-size':'20px'}),html.Br(),html.Label("en recherchant le mot clé \"ML\" sur Reddit",style={'font-size':'20px'})])],style={'float':'left','width':'49.5%','height':'20%','border-right': 'solid 0.5px'}),html.Div([html.Center([html.H2('Corpus "ML" Arxiv'),html.Label("Ce corpus de document contient les "+ str(int(n_doc/2)) +" premiers documents",style={'font-size':'20px'}),html.Br(),html.Label("en recherchant le mot clé \"ML\" sur Arxiv",style={'font-size':'20px'})],style={'float':'right','width':'49.5%','height':'20%','position':'relative'})]),html.Div([html.Center([html.H2("Statistiques générales"),html.Div(id="divStats",children=statsVoc)])],style={'position':'absolute','width':'100%','height':'80%','top':'45%'})],style={'z-index':'1','width':'100%','height':'20%','position':'absolute','background-color':'white'}),html.Div(id='mainDocDetails',children=[
+),html.Div(id="divInfos",children=
+[html.Center(html.H1('Informations générales')),
+    
+    html.Center(html.Label("Cette application dispose d'un moteur de recherche permettant de comparer différentes statistiques de pertinence en fonction")),
+    html.Br(),
+    html.Center(html.Label("de mot clés tapés dans une barre de recherche (utilisez le menu scroll du dessus afin de changer de menu)")),
+    
+    
+    html.Center(html.H2("Statistiques : ")),
+    html.Center(html.Div(id="divStats",children=statsVoc)),
+]),
+html.Div(id='mainDocDetails',children=[
     html.Div([
         dcc.Input(id='txtSearch',type='text',placeholder='Saisir les mots clés...',style={'margin':'0 auto','display':'block','margin-bottom':'5px'}),
         html.Div([
@@ -90,7 +101,7 @@ app.layout = html.Div([dcc.Dropdown(
     html.Div([html.Br(),html.Center('Corpus "ML" de Reddit',style={'font-size':'30px','font-weight':'bold'}),html.Br(),
               dash_table.DataTable(
                   id='tableReddit',page_size=5,page_action='native',
-                  data=dfReddit.to_dict('records'),     #the contents of the table
+                  data=dfReddit.to_dict('records'),   
                   columns=[
                       {'id': 'Id', 'name': 'ID'},
                       {'id': 'Nom', 'name': 'Titre'},
@@ -102,7 +113,7 @@ app.layout = html.Div([dcc.Dropdown(
     html.Div([html.Br(),html.Center('Corpus "ML" d\'Arxiv',style={'font-size':'30px','font-weight':'bold'}),html.Br(),
               dash_table.DataTable(
                   id='tableArxiv',page_size=5,page_action='native',
-                  data=dfArxiv.to_dict('records'),     #the contents of the table
+                  data=dfArxiv.to_dict('records'),     
                   columns=[
                       {'id': 'Id', 'name': 'ID'},
                       {'id': 'Nom', 'name': 'Titre'},
