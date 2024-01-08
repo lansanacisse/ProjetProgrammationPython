@@ -5,7 +5,7 @@ Moteur de recherche de documents textuels
 
 ### Pré-requis
 * Python 3.11
-* Librairies Python (requirements.txt)
+* Librairies Python installables via **requirements.txt**
 
 ### Installation 
 Cloning
@@ -21,6 +21,11 @@ Run the program (ui)
 ```
 python3 index.py
 ```
+
+Open the browser (Chrome, Safari, Arc, éviter Firefox) et entrer l'adresse suivante : <br/>
+http://127.0.0.1:8080
+
+
 
 ### Etudiants
 * Lansana CISSE
