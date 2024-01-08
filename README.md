@@ -1,10 +1,10 @@
 # ProjetProgrammationPython
 
 ### Description du projet
-Moteur de recherche basé sur le BOW (Bag of Words)
+Moteur de recherche de documents textuels 
 
 ### Pré-requis
-* Python 3.11.5
+* Python 3.11
 * Librairies Python (requirements.txt)
 
 ### Installation 
@@ -17,15 +17,15 @@ Install dependencies
 ```
 pip install -r requirements.txt
 ```
-Run the program
+Run the program (ui)
 ```
-python3 main.py
+python3 index.py
 ```
 
 ### Etudiants
 * Lansana CISSE
 * Romain DUC
 
-### Licence
-under the GNU General Public License v3.0
+### License
+GNU General Public License v3.0 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.fr.html) <br/>[LICENSE](LICENSE)
 

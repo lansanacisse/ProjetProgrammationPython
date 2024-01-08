@@ -23,6 +23,24 @@ class Document:
     def getType(self):
         pass
 
+    # guetters 
+    def getTitre(self):
+        return self.titre
+    
+    def getAuteur(self):
+        return self.auteur
+    
+    def getDate(self):
+        return self.date
+    
+    def getUrl(self):
+        return self.url
+    
+    def getTexte(self):
+        return self.texte
+    
+    
+
 class RedditDocument(Document):
     def __init__(self, titre, auteur, date, url, texte, type="Reddit"):
         """

@@ -1,5 +1,13 @@
 datetime
 pandas
-praw
+praw==7.7.1
 xmltodict
 numpy
+dash
+dash_core_components
+dash_html_components
+urllib
+importlib
+pickle
+nltk
+re
