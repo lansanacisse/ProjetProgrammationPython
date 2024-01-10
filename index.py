@@ -16,7 +16,6 @@ with open("./data/id2doc.pkl", "rb") as f:
     f.close()
 
 
-# Ouverture du fichier, puis lecture avec pickle
 with open("./data/id2author.pkl", "rb") as f:
     id2aut = pickle.load(f)
     f.close()
@@ -25,7 +24,7 @@ with open("./data/id2author.pkl", "rb") as f:
 corpus = Corpus.Corpus("Machine-Learning",id2aut,id2doc)
 
 corpus.matrice()
-dfid2doc = corpus.get_id2doc_DF()
+dfid2doc = corpus.get_id2doc_DF() # Récupération de la matrice sous forme de DataFrame
 
 dfReddit, dfArxiv = dfid2doc[dfid2doc["Type"]=="Reddit"], dfid2doc[dfid2doc["Type"]=="Arxiv"]
 n_doc = len(corpus.id2doc)
@@ -33,8 +32,8 @@ n_doc = len(corpus.id2doc)
 print(f"Stats générales du corpus: {corpus.stat()}")
 
 
-auteurReddit = dfReddit["Auteur"].unique()
-auteurArxiv = dfArxiv["Auteur"].unique()
+auteurReddit = dfReddit["Auteur"].unique()  # Récupération des auteurs Reddit
+auteurArxiv = dfArxiv["Auteur"].unique()    # Récupération des auteurs Arxiv
 
 statsVoc = list()
 statsVoc.append("Longueur du vocab : "+str(len(corpus.voc)))
@@ -43,7 +42,7 @@ statsVoc.append(corpus.stat())
 statsVoc.append(html.Br())
 statsVoc.append(html.Br())
 
-statsVoc.append("Les 10 premières de TF-IDF : ")
+statsVoc.append("Les 10 premières valeurs de TF-IDF : ")
 statsVoc.append(html.Br())
 statsVoc.append(html.Br())
 
@@ -52,7 +51,7 @@ for indx, row in corpus.getdfTfIdf().iterrows():
     dictTFIDF[indx] = row.sum()
 
 for k, v in sorted(dictTFIDF.items(), key=lambda item: item[1], reverse=True)[0:10]:
-    l = html.Label(k+" : TF-IDF = "+str(round(v, 2)))
+    l = html.Label(k+" : TF-IDF = "+v)
     statsVoc.append(l)
     statsVoc.append(html.Br())
 
@@ -132,10 +131,8 @@ html.Div(id='mainDocDetails',children=[
 def apply_filter(cbAuteur_value_left,cbAuteur_value_right,kw,start,end,clicks):
     dataf1 = dfReddit.copy()
     dataf2 = dfArxiv.copy()
-
     start_val = ''
     end_val=''
-
     print(start)
     print(end)
 
@@ -153,8 +150,7 @@ def apply_filter(cbAuteur_value_left,cbAuteur_value_right,kw,start,end,clicks):
     else:
         end_val=datetime.strptime(end, "%Y-%m-%d").date()
 
-    dataf1=dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)]
-    dataf2=dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
+    dataf1, dataf2=dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)], dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
 
     if kw:
         print('---------------------',kw)
@@ -173,8 +169,7 @@ def apply_filter(cbAuteur_value_left,cbAuteur_value_right,kw,start,end,clicks):
         if cbAuteur_value_right:
             dataf2 = dataf2[dataf2['Auteur'].eq(cbAuteur_value_right)]
 
-    dataf1=dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)]
-    dataf2=dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
+    dataf1, dataf2 = dataf1[(dataf1['Date'] >=start_val) & (dataf1['Date']<=end_val)], dataf2[(dataf2['Date'] >=start_val) & (dataf2['Date']<=end_val)]
 
     return dataf1.to_dict(orient='records'),dataf2.to_dict(orient='records')
 
@@ -208,7 +203,7 @@ def update_left_pannel(active_cell,data,txt,page_curr,page_size):
             row = active_cell['row']
         Id=data[row]['Id']
         txtDoc = dfReddit[dfReddit['Id'].eq(Id)]['Text']
-        nbComms = dfReddit[dfReddit['Id'].eq(Id)]['Caractéristiques'].values[0]
+        
         if txt:
             score = dfReddit[dfReddit['Id'].eq(Id)]['score'].values[0]
             if score==0.00:
@@ -246,9 +241,9 @@ def update_left_pannel(active_cell,data,txt,page_curr,page_size):
                 tfxidfWords.append(value)
                 tfxidfWords.append(html.Br())
 
-            return_value = html.Div([html.Center([html.Br(),html.B('Score : ',style={'font-size':'25px'}),html.Label(children=[score],style={'background-color':color,'font-size':'20px'}),html.Br(),html.Div(id='divWordsLeft'),html.Br(),html.B('Full text : ',style={'font-size':'25px'}),html.Br(),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br(),'Nombre de commentaire(s) : '+str(nbComms)])]),html.Div(children=tfxidfWords),{'display':'block'}
+            return_value = html.Div([html.Center([html.Br(),html.B('Score : ',style={'font-size':'25px'}),html.Label(children=[score],style={'background-color':color,'font-size':'20px'}),html.Br(),html.Div(id='divWordsLeft'),html.Br(),html.B('Full text : ',style={'font-size':'25px'}),html.Br(),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br()])]),html.Div(children=tfxidfWords),{'display':'block'}
         else:
-            return_value = html.Div([html.Center([html.B('Full text : ',style={'font-size':'25px'}),html.Br(),html.Div(id='divWordsLeft'),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br(),'Nombre de commentaire(s) : '+str(nbComms)])]),html.Div(),{'display':'block','border-right':'solid 0.5px'}
+            return_value = html.Div([html.Center([html.B('Full text : ',style={'font-size':'25px'}),html.Br(),html.Div(id='divWordsLeft'),dcc.Textarea(style={'font-size':'20px'},value=txtDoc,rows=10,cols=30),html.Br()])]),html.Div(),{'display':'block','border-right':'solid 0.5px'}
     return return_value
 
 @app.callback(
